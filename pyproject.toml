@@ -98,7 +98,7 @@ atomic = true
 ## Poetry Configuration
 [tool.poetry.dependencies]
 python = "^3.12"
-discord = "*"
+py-cord = {extras = ["voice"], version = "^2.6.1"}
 dynaconf = "^3.2.6"
 requests = "^2.32.3"
 
