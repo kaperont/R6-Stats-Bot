@@ -1,0 +1,121 @@
+[tool.poetry]
+name = "r6-stats-bot"
+version = "1.0.0"
+description = ""
+authors = ["Kyle Peront"]
+readme = "README.md"
+package-mode = false
+
+# Test configuration
+
+[tool.pytest.ini_options]
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+
+# Options
+# --cov ensures the python coverage module gets called (because py-cov adds that as an option to pytest)
+addopts = "--ds=config.settings --cov --cov-report=html"
+
+[tool.coverage.run]
+# This is based on the default app name,  If you have a different app name, change it (e.g "api").  If you
+# want to test multiple apps, change to source = ["."] to test from the root down.
+source = ["core"]
+branch = true
+omit = [
+    "*migrations*",
+    "*tests*",
+    "*manage.py",
+    "*.venv/*",
+    "*templates/*",
+    "*config/*",
+    "*utility/*",
+    "*admin.py",
+    "*apps.py",
+    "*__init__*",
+]
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.coverage.html]
+directory = "reports"
+
+[tool.coverage.xml]
+output = "reports/coverage.xml"
+
+### Formatting and linting configuration ###
+[tool.yapf]
+based_on_style = "pep8"
+column_limit = 120
+each_dict_entry_on_separate_line = true
+force_multiline_dict = true
+allow_split_before_dict_value = true
+dedent_closing_brackets = true
+indent_dictionary_value = true
+split_before_first_argument = true
+split_before_expression_after_opening_paren = true
+
+[tool.yapfignore]
+ignore_patterns = ["**/migrations/*.py"]
+
+[tool.ruff]
+line-length = 120
+extend-exclude = ["test_*.py", "migrations/*", "__init__.py"]
+fix = true
+
+[tool.ruff.format]
+# Prefer single quotes over double quotes
+quote-style = "single"
+
+[tool.ruff.lint]
+# Enable flake8-bugbear (`B`) rules.
+select = ["E", "F", "B"]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "single"
+
+
+[tool.ruff.lint.per-file-ignores]
+# ignores star imports in our settings files
+"**settings/*.py" = ["F403"]
+
+
+[tool.isort]
+# Uses mode 3 (hanging indent, vertical) when it has to deal with multiple imports
+multi_line_output = 3
+# "Multiple" imports is defined as 3 or more (or if the total line length is > 120 chars)
+force_grid_wrap = 3
+use_parentheses = true
+include_trailing_comma = true
+line_length = 120
+skip = ["__init__.py", "migrations/*"]
+filter_files = true
+atomic = true
+
+## Poetry Configuration
+[tool.poetry.dependencies]
+python = "^3.12"
+discord = "*"
+dynaconf = "^3.2.6"
+requests = "^2.32.3"
+
+[tool.poetry.group.dev]
+# This will ensure dev dependencies are only installed with `poetry install --with dev`
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+coverage = { extras = ["toml"], version = "^6.3.2" }
+pytest = "^8.0"
+pytest-cov = "*"
+pytest-sugar = "*"
+toml = "^0.10.2"
+isort = "*"
+yapf = "*"
+ruff = "^0.3.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
