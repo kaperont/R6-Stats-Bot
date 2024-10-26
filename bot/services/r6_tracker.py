@@ -80,6 +80,7 @@ class R6TrackerService:
 
             stats = soup.header.get_text(separator='::').split('::')
             color = int(soup.header.find('span', class_='truncate')['style'].strip('color:#').strip(';'), 16)
+            rank_img_url = soup.header.find('img', class_='rank-image')['src']
 
             embed = discord.Embed(
                 title=f'{stats[0]}: {stats[1]}',
@@ -91,6 +92,7 @@ class R6TrackerService:
             rp = f'`{stats[2]} RP`'
             rp += f' (*{stats[-1]}*)' if '%' in stats[-1] else ''
 
+            embed.set_image(url=rank_img_url)
             embed.set_author(name='R6 Tracker', icon_url='https://imgsvc.trackercdn.com/url/max-width(48),quality(66)/https%3A%2F%2Ftrackercdn.com%2Fcdn%2Ftracker.gg%2Fr6siege%2Fr6-ow-badge.png/image.png')
             embed.add_field(name='Rank Points', value=rp)
             embed.set_footer(text='Stats provided by TRN.', icon_url='https://trackercdn.com/static-files/trackergg/production/dist/client/assets/DSvub3La.png')
