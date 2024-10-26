@@ -21,6 +21,8 @@ settings.REQUEST_SETTINGS = {
 }
 
 ################# Application Settings #################
+settings.BASE_TRACKER_HTML_URL = getattr(settings, 'BASE_TRACKER_HTML_URL', 'http://localhost:8000')
 settings.BASE_TRACKER_API_URL = getattr(settings, 'BASE_TRACKER_API_URL', 'http://localhost:8000/api')
+settings.TRACKER_API_TOKEN = getattr(settings, 'TRACKER_API_TOKEN', 'TOKEN-TOKEN-TOKEN-TOKEN')
 settings.DISCORD_BOT_TOKEN = getattr(settings, 'DISCORD_BOT_TOKEN', 'TOKEN-TOKEN-TOKEN-TOKEN')
 settings.DISCORD_GUILD_ID = int(getattr(settings, 'DISCORD_GUILD_ID', 'GUILD-ID-GUILD-ID'))

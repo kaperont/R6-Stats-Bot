@@ -14,7 +14,7 @@ class Tracker(commands.Cog):
         self._last_member = None
 
     @commands.command()
-    async def hello(self, ctx: commands.context.Context, *, member: discord.Member = None):
+    async def hello(self, ctx: commands.Context, *, member: discord.Member = None):
         member = member or ctx.author
         if self._last_member is None or self._last_member.id != member.id:
             await ctx.send(f'Hello {member.mention}!')
@@ -29,11 +29,17 @@ class Tracker(commands.Cog):
         await ctx.respond(f'{ctx.author.mention} says hello to {member.mention}!')
 
     @discord.slash_command(name='track', description = 'Track the specified user\'s stats.')
-    async def track(self, interaction: discord.Interaction, username: str, playlist: str = 'standard'):
-        data = R6TrackerService.get_user_stats(username, playlist)
+    async def track(self, ctx, username: str, playlist: discord.Option(str, choices=['standard', 'ranked'], default='standard'), platform: discord.Option(str, choices=['ubi', 'xbl', 'psn'], default='ubi')):
+        data = R6TrackerService.get_user_stats(username, playlist, platform)
 
         logger.debug(f'User Data: {data}')
-        await interaction.response.send_message('Got the data! Or did I... Tracking is coming soon!')
+        await ctx.respond('Got the data! Or did I... Tracking is coming soon!')
+    
+    @discord.slash_command(name='rank', description='The rank of the specified user.')
+    async def rank(self, ctx, username: str, platform: discord.Option(str, choices=['ubi', 'xbl', 'psn'], default='ubi')):
+        embed = R6TrackerService.get_user_stats_from_html(username, platform)
+
+        await ctx.respond(embed=embed)
 
 
 def setup(bot: commands.Bot):

@@ -101,6 +101,7 @@ python = "^3.12"
 py-cord = {extras = ["voice"], version = "^2.6.1"}
 dynaconf = "^3.2.6"
 requests = "^2.32.3"
+beautifulsoup4 = "^4.12.3"
 
 [tool.poetry.group.dev]
 # This will ensure dev dependencies are only installed with `poetry install --with dev`
