@@ -18,6 +18,7 @@ def main():
 
     bot = Bot(command_prefix='!', intents=intents)
     bot.load_extension('bot.cogs.tracker')
+    bot.load_extension('bot.cogs.mongo')
 
     bot.run(settings.DISCORD_BOT_TOKEN)
 

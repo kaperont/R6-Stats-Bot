@@ -29,12 +29,12 @@ settings.DISCORD_GUILD_ID = int(getattr(settings, 'DISCORD_GUILD_ID', 'GUILD-ID-
 
 
 settings.DATABASES = {
-    'default': {
-        'DATABASE': getattr(settings, 'DATABASE_NAME', 'r6_stats'),
-        'URL': getattr(settings, 'DB_URL', 'mongodb://root:password@localhost:27017/')
+    'owner': {
+        'CLIENT': getattr(settings, 'DB_URL', 'mongodb://root:password@localhost:27017/'),
+        'NAME': getattr(settings, 'DATABASE_NAME', 'r6_stats'),
     },
-    'readwrite': {
-        'DATABASE': getattr(settings, 'DATABASE_NAME', 'r6_stats'),
-        'URL': getattr(settings, 'DB_READ_URL', 'mongodb://root:password@localhost:27017/')
+    'default': {
+        'CLIENT': getattr(settings, 'DB_READ_URL', 'mongodb://root:password@localhost:27017/'),
+        'NAME': getattr(settings, 'DATABASE_NAME', 'r6_stats'),
     }
 }

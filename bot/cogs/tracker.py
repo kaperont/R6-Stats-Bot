@@ -3,7 +3,7 @@ import logging
 import discord
 from discord.ext import commands
 
-from ..services import R6TrackerService
+from ..services import MongoDBService, R6TrackerService
 
 logger = logging.getLogger(__name__)
 
@@ -12,6 +12,7 @@ class Tracker(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self._last_member = None
+        self.service = MongoDBService()
 
     @commands.command()
     async def hello(self, ctx: commands.Context, *, member: discord.Member = None):
@@ -36,8 +37,23 @@ class Tracker(commands.Cog):
         await ctx.respond('Got the data! Or did I... Tracking is coming soon!')
     
     @discord.slash_command(name='rank', description='The rank of the specified user.')
-    async def rank(self, ctx, username: str, platform: discord.Option(str, choices=['ubi', 'xbl', 'psn'], default='ubi')):
-        embed = R6TrackerService.get_user_stats_from_html(username, platform)
+    async def rank(self, ctx, platform: discord.Option(str, choices=['ubi', 'xbl', 'psn'], default='ubi'), username: str | None = None):
+        if username:
+            embed = R6TrackerService.get_user_stats_from_html(username, platform)
+            await ctx.respond(embed=embed)
+
+            return
+
+        try:
+            user = self.service.get(user_id=ctx.author.id)
+            embed = R6TrackerService.get_user_stats_from_html(user['username'], user['platform'])
+
+        except self.service.DoesNotExist:
+            await ctx.respond(embed=discord.Embed(
+                title='No Account Claimed!',
+                description='Please claim an R6 Account using `/claim`, or provide a `username` to track.'
+            ))
+            return
 
         await ctx.respond(embed=embed)
 
