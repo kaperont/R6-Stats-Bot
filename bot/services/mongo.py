@@ -4,6 +4,11 @@ from ..settings import settings
 
 
 class MongoDBService:
+    '''MongoDB Interface Layer
+
+        Interfaces with the MongoDB connection defined in settings. Can optionally connect to a particular Collection by
+        passing `collection='<collection>'` upon instantiation. Default Collection is `User`.
+    '''
     client = MongoClient(settings.DATABASES['default']['CLIENT'])
     db = client[settings.DATABASES['default']['NAME']]
 
