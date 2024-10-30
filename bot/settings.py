@@ -26,3 +26,15 @@ settings.BASE_TRACKER_API_URL = getattr(settings, 'BASE_TRACKER_API_URL', 'http:
 settings.TRACKER_API_TOKEN = getattr(settings, 'TRACKER_API_TOKEN', 'TOKEN-TOKEN-TOKEN-TOKEN')
 settings.DISCORD_BOT_TOKEN = getattr(settings, 'DISCORD_BOT_TOKEN', 'TOKEN-TOKEN-TOKEN-TOKEN')
 settings.DISCORD_GUILD_ID = int(getattr(settings, 'DISCORD_GUILD_ID', 'GUILD-ID-GUILD-ID'))
+
+
+settings.DATABASES = {
+    'default': {
+        'DATABASE': getattr(settings, 'DATABASE_NAME', 'r6_stats'),
+        'URL': getattr(settings, 'DB_URL', 'mongodb://root:password@localhost:27017/')
+    },
+    'readwrite': {
+        'DATABASE': getattr(settings, 'DATABASE_NAME', 'r6_stats'),
+        'URL': getattr(settings, 'DB_READ_URL', 'mongodb://root:password@localhost:27017/')
+    }
+}
