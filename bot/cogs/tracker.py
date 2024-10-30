@@ -53,7 +53,7 @@ class Tracker(commands.Cog):
                 title='No Account Claimed!',
                 description='Please claim an R6 Account using `/claim`, or provide a `username` to track.',
                 color=discord.Colour.red()
-            ))
+            ), ephemeral=True)
             return
 
         await ctx.respond(embed=embed)

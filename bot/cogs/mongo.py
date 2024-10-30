@@ -19,10 +19,10 @@ class MongoCog(commands.Cog):
             _ = self.service.get(user_id=ctx.author.id)
 
         except self.service.DoesNotExist:
-            await ctx.respond(view=PlatformSelectView())
+            await ctx.respond(view=PlatformSelectView(), ephemeral=True)
             return
 
-        await ctx.respond(view=ConfirmUserOverwriteView())
+        await ctx.respond(view=ConfirmUserOverwriteView(), ephemeral=True)
 
 
     @discord.slash_command(name='user', description='Displays user data.')
@@ -37,7 +37,7 @@ class MongoCog(commands.Cog):
                 color=discord.Colour.red()
             )
 
-            await ctx.respond(embed=embed)
+            await ctx.respond(embed=embed, ephemeral=True)
             return
 
         embed = discord.Embed(
@@ -100,12 +100,12 @@ class PlatformSelectView(discord.ui.View):
 class ConfirmUserOverwriteView(discord.ui.View):
     @discord.ui.button(label="Cancel", style=discord.ButtonStyle.danger)
     async def reject_callback(self, button, interaction):
-        await interaction.response.send_message('Canceled!')
+        await interaction.response.send_message('Canceled Action!', ephemeral=True)
         self.stop()
 
     @discord.ui.button(label="Confirm", style=discord.ButtonStyle.primary)
     async def confirm_callback(self, button, interaction):
-        await interaction.response.send_message('Select a Platform', view=PlatformSelectView(is_update=True))
+        await interaction.response.send_message('Select a Platform', view=PlatformSelectView(is_update=True), ephemeral=True)
         self.stop()
 
 
