@@ -33,7 +33,8 @@ class MongoCog(commands.Cog):
         except self.service.DoesNotExist:
             embed = discord.Embed(
                 title='No Account Claimed',
-                description='You have not yet claimed an account! To claim an R6 Account, use `/claim`.'
+                description='You have not yet claimed an account! To claim an R6 Account, use `/claim`.',
+                color=discord.Colour.red()
             )
 
             await ctx.respond(embed=embed)
@@ -63,8 +64,8 @@ class UserModal(discord.ui.Modal):
             'platform': self.platform,
         }
 
-        embed = discord.Embed(title="Account Claimed!")
-        embed.add_field(name="User ID", value=interaction.user.mention)
+        embed = discord.Embed(title='Account Claimed!', color=discord.Colour.green())
+        embed.add_field(name="Handle", value=interaction.user.mention)
         embed.add_field(name="Username", value=f'`{self.children[0].value}`')
         embed.add_field(name="Platform", value=f'`{self.platform}`')
 
