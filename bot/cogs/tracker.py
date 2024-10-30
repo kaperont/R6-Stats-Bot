@@ -51,7 +51,8 @@ class Tracker(commands.Cog):
         except self.service.DoesNotExist:
             await ctx.respond(embed=discord.Embed(
                 title='No Account Claimed!',
-                description='Please claim an R6 Account using `/claim`, or provide a `username` to track.'
+                description='Please claim an R6 Account using `/claim`, or provide a `username` to track.',
+                color=discord.Colour.red()
             ))
             return
 
