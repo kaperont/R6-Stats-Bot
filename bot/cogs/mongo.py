@@ -40,10 +40,11 @@ class MongoCog(commands.Cog):
             await ctx.respond(embed=embed, ephemeral=True)
             return
 
-        embed = discord.Embed(
-            title=user['username'],
-            description=f'Platform: `{user["platform"]}`'
-        )
+        embed = discord.Embed(title='Located Account!', color=discord.Colour.green())
+        embed.add_field(name="Handle", value=ctx.author.mention)
+        embed.add_field(name="Username", value=f'`{user['username']}`')
+        embed.add_field(name="Platform", value=f'`{user["platform"]}`')
+
         await ctx.respond(embed=embed)
 
 
