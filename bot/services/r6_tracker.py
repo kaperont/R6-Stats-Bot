@@ -77,19 +77,23 @@ class R6TrackerService:
                 return default_embed
 
             soup = BeautifulSoup(response.content)
+            season_card = soup.find('div', class_='season-card')
+            color_div = season_card.find('span', class_='text-secondary').find('span', class_='truncate')
 
-            stats = soup.header.get_text(separator='::').split('::')
-            color = int(soup.header.find('span', class_='truncate')['style'].strip('color:#').strip(';'), 16)
-            rank_img_url = soup.header.find('img', class_='rank-image')['src']
+            stats = season_card.header.get_text(separator='::').split('::')
+            rank_img_url = season_card.find('img', class_='rank-image')['src']
+            color = int(color_div['style'].strip('color:#').strip(';'), 16)
+            # rgb = soup.find('div', class_='season-card').find('span', class_='text-secondary').find('span', class_='truncate')['style'].strip('color: rgb()').split(',')
+            # color = discord.Color.from_rgb(*rgb)
 
             embed = discord.Embed(
-                title=f'{stats[0]}: {stats[1]}',
+                title=f'{stats[0]}  -  {stats[1]}',
                 description=f'Here\'s what I found for {username}!',
                 url=url,
-                color=int(color)
+                color=color
             )
 
-            rp = f'`{stats[2]} RP`'
+            rp = f'`{stats[1]} RP`'
             rp += f' (*{stats[-1]}*)' if '%' in stats[-1] else ''
 
             embed.set_image(url=rank_img_url)
