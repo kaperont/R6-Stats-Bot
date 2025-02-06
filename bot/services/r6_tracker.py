@@ -9,14 +9,11 @@ from ..settings import settings
 
 logger = logging.getLogger(__name__)
 
-REQUEST_SETTINGS = settings.REQUEST_SETTINGS.to_dict()
-REQUEST_SETTINGS['cert'] = tuple(REQUEST_SETTINGS.get('cert', []))
-
 
 class R6TrackerService:
     BASE_HTML_URL = settings.BASE_TRACKER_HTML_URL
     BASE_API_URL = settings.BASE_TRACKER_API_URL
-    DEFAULT_REQUEST_SETTINGS = REQUEST_SETTINGS
+    DEFAULT_REQUEST_SETTINGS = settings.REQUEST_SETTINGS
     
     @classmethod
     def get_user_stats(cls, username: str, playlist: str = 'standard', platform: str = 'ubi'):

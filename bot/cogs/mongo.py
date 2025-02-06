@@ -3,7 +3,7 @@ import logging
 import discord
 from discord.ext import commands
 
-from ..services import MongoDBService
+from ..models import User
 
 logger = logging.getLogger(__name__)
 
@@ -11,14 +11,10 @@ logger = logging.getLogger(__name__)
 class MongoCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.service = MongoDBService()
 
     @discord.slash_command(name='claim', description='Claims a particular R6 Siege account.')
     async def claim(self, ctx):
-        try:
-            _ = self.service.get(user_id=ctx.author.id)
-
-        except self.service.DoesNotExist:
+        if (await User.find_one(User.user_id == ctx.author.id)) is None:
             await ctx.respond(view=PlatformSelectView(), ephemeral=True)
             return
 
@@ -27,10 +23,7 @@ class MongoCog(commands.Cog):
 
     @discord.slash_command(name='user', description='Displays user data.')
     async def user(self, ctx):
-        try:
-            user = self.service.get(user_id=ctx.author.id)
-
-        except self.service.DoesNotExist:
+        if (user := await User.find_one(User.user_id == ctx.author.id)) is None:
             embed = discord.Embed(
                 title='No Account Claimed',
                 description='You have not yet claimed an account! To claim an R6 Account, use `/claim`.',
@@ -42,15 +35,13 @@ class MongoCog(commands.Cog):
 
         embed = discord.Embed(title='Located Account!', color=discord.Colour.green())
         embed.add_field(name="Handle", value=ctx.author.mention)
-        embed.add_field(name="Username", value=f'`{user['username']}`')
-        embed.add_field(name="Platform", value=f'`{user["platform"]}`')
+        embed.add_field(name="Username", value=f'`{user.username}`')
+        embed.add_field(name="Platform", value=f'`{user.platform}`')
 
         await ctx.respond(embed=embed)
 
 
 class UserModal(discord.ui.Modal):
-    service = MongoDBService()
-
     def __init__(self, platform: str = 'ubi', is_update: bool = False, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
@@ -71,10 +62,15 @@ class UserModal(discord.ui.Modal):
         embed.add_field(name="Platform", value=f'`{self.platform}`')
 
         if self.is_update:
-            self.service.update(user_data, user_id=interaction.user.id)
+            if (user := await User.find_one(User.user_id == interaction.user.id)) is None:
+                logger.waring('Attempted to update user that does not exist.')
+                return
+
+            await user.set(user_data)
 
         else:
-            self.service.create(**user_data)
+            user = User(**user_data)
+            await user.save()
 
         await interaction.response.send_message(embeds=[embed])
 

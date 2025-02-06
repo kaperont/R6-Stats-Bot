@@ -3,7 +3,8 @@ import logging
 import discord
 from discord.ext import commands
 
-from ..services import MongoDBService, R6TrackerService
+from ..models import User
+from ..services import R6TrackerService
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +12,6 @@ logger = logging.getLogger(__name__)
 class Tracker(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.service = MongoDBService()
 
     @discord.slash_command(name='rank', description='The rank of the specified user.')
     async def rank(self, ctx, platform: discord.Option(str, choices=['ubi', 'xbl', 'psn'], default='ubi'), username: str | None = None):
@@ -21,11 +21,7 @@ class Tracker(commands.Cog):
 
             return
 
-        try:
-            user = self.service.get(user_id=ctx.author.id)
-            embed = R6TrackerService.get_user_stats_from_html(user['username'], user['platform'])
-
-        except self.service.DoesNotExist:
+        if (user := await User.find_one(User.user_id == ctx.author.id)) is None:
             await ctx.respond(embed=discord.Embed(
                 title='No Account Claimed!',
                 description='Please claim an R6 Account using `/claim`, or provide a `username` to track.',
@@ -33,6 +29,7 @@ class Tracker(commands.Cog):
             ), ephemeral=True)
             return
 
+        embed = R6TrackerService.get_user_stats_from_html(user.username, user.platform)
         await ctx.respond(embed=embed)
 
 

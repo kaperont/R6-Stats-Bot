@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "r6-stats-bot"
-version = "1.0.0"
+version = "1.1.0"
 description = ""
 authors = ["Kyle Peront"]
 readme = "README.md"
@@ -99,10 +99,10 @@ atomic = true
 [tool.poetry.dependencies]
 python = "^3.12"
 py-cord = {extras = ["voice"], version = "^2.6.1"}
-dynaconf = "^3.2.6"
 requests = "^2.32.3"
 beautifulsoup4 = "^4.12.3"
-pymongo = "^4.10.1"
+beanie = "^1.29.0"
+pydantic-settings = "^2.7.1"
 
 [tool.poetry.group.dev]
 # This will ensure dev dependencies are only installed with `poetry install --with dev`
